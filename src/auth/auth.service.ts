@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   private async generateJwt(user: Omit<User, 'password'>) {
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, username: user.username, role: user.role };
     const token = await this.jwtService.signAsync(payload);
 
     return token;
@@ -36,7 +36,7 @@ export class AuthService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = foundUser;
-    const token = this.generateJwt(user);
+    const token = await this.generateJwt(user);
 
     return { user, token };
   }
@@ -54,7 +54,7 @@ export class AuthService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = newUser;
-    const token = this.generateJwt(user);
+    const token = await this.generateJwt(user);
 
     return { user, token };
   }
