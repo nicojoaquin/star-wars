@@ -28,3 +28,25 @@ model User {
   password  String
   role      Role    @default(REGULAR)
 }
+
+model Movie {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title        String
+  episodeId    Int    @unique
+  director     String
+  producer     String
+  releaseDate  DateTime
+  openingCrawl String
+  url          String?
+
+  characters   String[] @default([])
+  planets      String[] @default([])
+  species      String[] @default([])
+  starships    String[] @default([])
+  vehicles     String[] @default([])
+}
+
+
