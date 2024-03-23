@@ -1,73 +1,148 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+### Installation
 
 ```bash
+# With SSH
+$ git clone git@github.com:Greelow-LLC/healthcare-strong.git
+
+# With HTTPS
+$ git clone https://github.com/Greelow-LLC/healthcare-strong.git
+
+$ cd cd conexa_start-wars
+
 $ npm install
+
 ```
 
-## Running the app
+### Setting up database
 
 ```bash
-# development
-$ npm run start
+# Must have docker-compose
+$ npm run db:up
 
-# watch mode
-$ npm run start:dev
+# For development (also, do this every time a change on the schema is made)
+$ npm run migrate
+$ npm run generate
+```
 
-# production mode
+### Running the app
+
+```bash
+# Development
+$ npm run dev
+
+# Production
+$ npm run build
 $ npm run start:prod
+
+# Prisma studio
+$ npm run studio
 ```
 
-## Test
+### After login
+
+- Get token from response
+- Send it in Authorization header like: Bearer {{token}}
+
+### Api endpoints
+
+Replace localhost by app url
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+POST http://localhost:3001/api/auth/login
 ```
 
-## Support
+- Login
+- Payload (use this credentials for logging in with admin user):
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+{
+    "username": "nicoadmin",
+    "password": "nico1234"
+}
+```
 
-## Stay in touch
+```bash
+POST http://localhost:3001/api/auth/register
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Register
+- Payload (regular user by default)
 
-## License
+```
+{
+    "name": "Nicolás",
+    "username": "nicojoaquin",
+    "password": "nico1234"
+}
+```
 
-Nest is [MIT licensed](LICENSE).
+```bash
+GET http://localhost:3001/api/auth/movies/:id
+```
+
+- Get movie by ud
+- Regular user only
+
+```bash
+GET http://localhost:3001/api/auth/movies
+```
+
+- Get all movies
+
+```bash
+Post http://localhost:3001/api/auth/movies
+```
+
+- Create movie with eposide id, based in the star wars API
+- Admin user only
+- Payload (1 to 6 episodeId)
+
+```
+{
+    "episodeId": 5
+}
+```
+
+```bash
+Post http://localhost:3001/api/auth/movies/new
+```
+
+- Create a new movie
+- Admin user only
+- Can't send an existing episode id (from star wars api and from this app)
+- Paylaod
+
+```
+{
+    "episodeId": 11,
+    "title": "new movie",
+    "director": "director",
+    "producer": "producer",
+    "releaseDate": "1998-10-02",
+    "openingCrawl": "dummy text for crawl"
+}
+```
+
+```bash
+Put http://localhost:3001/api/auth/movies/:id
+```
+
+- Update a movie by id
+- Admin user only
+- Can't send an existing episode id (from star wars api and from this app)
+- Paylaod
+
+```
+{
+    "episodeId": 22,
+    "title": "updated movie",
+    "director": "updated director",
+}
+```
+
+```bash
+Delete http://localhost:3001/api/auth/movies/:id
+```
+
+- Delete a movie by id
+- Admin user only
