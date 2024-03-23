@@ -92,7 +92,7 @@ export class MoviesService {
   }
 
   async createNewMovie(dto: CreateMovieDto) {
-    const dbMovie = this.movieEntity.findUnique({
+    const dbMovie = await this.movieEntity.findUnique({
       where: { episodeId: dto.episodeId },
     });
 
