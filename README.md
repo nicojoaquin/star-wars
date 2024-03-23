@@ -7,7 +7,7 @@ $ git clone git@github.com:Greelow-LLC/healthcare-strong.git
 # With HTTPS
 $ git clone https://github.com/Greelow-LLC/healthcare-strong.git
 
-$ cd cd conexa_start-wars
+$ cd conexa_start-wars
 
 $ npm install
 
