@@ -11,8 +11,9 @@ import { ConfigService } from '@nestjs/config';
 import { FILMS_ENDPOINT } from './constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Movie, PrismaClient } from '@prisma/client';
-import { CreateMovieDto } from './dto/create-movie.dto';
+import { CreateMovieFromApiDto } from './dto/create-movie-from-api.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CreateMovieDto } from './dto/create-movie.dto';
 
 @Injectable()
 export class MoviesService {
@@ -39,20 +40,20 @@ export class MoviesService {
     apiMovie: MoviesApi,
   ): Omit<Movie, 'id' | 'createdAt' | 'updatedAt'> {
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      created,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      edited,
+      director,
+      producer,
       episode_id,
       opening_crawl,
       release_date,
-      ...restMoview
+      title,
     } = apiMovie;
 
     return {
-      ...restMoview,
-      episodeId: episode_id,
+      title,
+      director,
+      producer,
       openingCrawl: opening_crawl,
+      episodeId: episode_id,
       releaseDate: new Date(release_date),
     };
   }
@@ -73,9 +74,10 @@ export class MoviesService {
     return this.movieEntity.findMany();
   }
 
-  async create({ episodeId }: CreateMovieDto) {
-    const movie = await this.movieEntity.findUnique({ where: { episodeId } });
-    if (movie) {
+  //Create a movie with the episode id from the api
+  async createFromApi({ episodeId }: CreateMovieFromApiDto) {
+    const dbMovie = await this.movieEntity.findUnique({ where: { episodeId } });
+    if (dbMovie) {
       throw new BadRequestException('There is a movie with this episode');
     }
 
@@ -83,10 +85,34 @@ export class MoviesService {
     const apiMovie = apiMovies.find(movie => movie.episode_id === episodeId);
 
     if (!apiMovie) {
-      throw new BadRequestException('Episode does not exist');
+      throw new NotFoundException('Episode does not exist');
     }
 
     return this.movieEntity.create({ data: this.formatMovie(apiMovie) });
+  }
+
+  async createNewMovie(dto: CreateMovieDto) {
+    const dbMovie = this.movieEntity.findUnique({
+      where: { episodeId: dto.episodeId },
+    });
+
+    if (dbMovie) {
+      throw new BadRequestException('There is a movie with this episode');
+    }
+
+    //Always have to find all because the api does not retrieve the id so the user will never know how to find it
+    const apiMovies = await this.findAllFromApi();
+    const apiMovie = apiMovies.some(
+      movie => movie.episode_id === dto.episodeId,
+    );
+
+    if (apiMovie) {
+      throw new BadRequestException('There is a movie with this episode');
+    }
+
+    return this.movieEntity.create({
+      data: { ...dto, releaseDate: new Date(dto.releaseDate) },
+    });
   }
 
   async update(dto: UpdateMovieDto, id: number) {
@@ -96,6 +122,25 @@ export class MoviesService {
 
     if (!movie) {
       throw new NotFoundException('Movie not found');
+    }
+
+    if (dto.episodeId) {
+      const dbMovie = await this.movieEntity.findUnique({
+        where: { episodeId: dto.episodeId },
+      });
+
+      if (dbMovie) {
+        throw new BadRequestException('There is a movie with this episode');
+      }
+
+      const apiMovies = await this.findAllFromApi();
+      const apiMovie = apiMovies.some(
+        movie => movie.episode_id === dto.episodeId,
+      );
+
+      if (apiMovie) {
+        throw new BadRequestException('There is a movie with this episode');
+      }
     }
 
     return this.movieEntity.update({

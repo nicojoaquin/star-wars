@@ -1,7 +1,6 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
 import { useContainer } from 'class-validator';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
@@ -14,8 +13,6 @@ async function bootstrap() {
       credentials: false,
     },
   });
-
-  app.use(cookieParser());
 
   //Use validations in all app
   app.useGlobalPipes(

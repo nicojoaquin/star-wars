@@ -11,8 +11,9 @@ import {
 import { MoviesService } from './movies.service';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Role } from 'src/auth/decorators/role.decorator';
-import { CreateMovieDto } from './dto/create-movie.dto';
+import { CreateMovieFromApiDto } from './dto/create-movie-from-api.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CreateMovieDto } from './dto/create-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -32,8 +33,14 @@ export class MoviesController {
 
   @Role('ADMIN')
   @Post()
-  create(@Body() dto: CreateMovieDto) {
-    return this.moviesService.create(dto);
+  createFromApi(@Body() dto: CreateMovieFromApiDto) {
+    return this.moviesService.createFromApi(dto);
+  }
+
+  @Role('ADMIN')
+  @Post('/new')
+  createNewMovie(@Body() dto: CreateMovieDto) {
+    return this.moviesService.createNewMovie(dto);
   }
 
   @Role('ADMIN')

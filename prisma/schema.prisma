@@ -40,13 +40,6 @@ model Movie {
   producer     String
   releaseDate  DateTime
   openingCrawl String
-  url          String?
-
-  characters   String[] @default([])
-  planets      String[] @default([])
-  species      String[] @default([])
-  starships    String[] @default([])
-  vehicles     String[] @default([])
 }
 
 
