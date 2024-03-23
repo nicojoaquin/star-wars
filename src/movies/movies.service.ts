@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { MoviesApi, MoviesApiResponse } from './types/movies.types';
 import { ConfigService } from '@nestjs/config';
 import { FILMS_ENDPOINT } from './constants';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Movie, PrismaClient } from '@prisma/client';
 import { CreateMovieFromApiDto } from './dto/create-movie-from-api.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
