@@ -4,7 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
-const APP_URL = process.env.APP_URL;
 const PORT = process.env.PORT || 3001;
 
 async function bootstrap() {
@@ -31,7 +30,7 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   await app.listen(PORT);
-  console.log(`Server initialized in ${APP_URL}`);
+  console.log(`Server initialized in port ${PORT}`);
 }
 
 bootstrap();

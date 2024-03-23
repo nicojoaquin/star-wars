@@ -11,6 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "db:up": "docker-compose up -d db-star-wars",
+    "db:deploy": "npx prisma migrate deploy",
     "dev": "npm run db:up && npm run start:dev",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
