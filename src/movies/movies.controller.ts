@@ -9,11 +9,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { Role } from 'src/auth/decorators/role.decorator';
 import { CreateMovieFromApiDto } from './dto/create-movie-from-api.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { Public } from '../auth/decorators/public.decorator';
+import { Role } from '../auth/decorators/role.decorator';
 
 @Controller('movies')
 export class MoviesController {
